@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php"
+         colors="true"
+         strict="true"
+         processIsolation="false"
+         cacheResult="false">
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Feature">
+            <directory>tests/Feature</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <ini name="error_reporting" value="-1"/>
+        <ini name="display_errors" value="0"/>
+        <env name="APP_ENV" value="testing"/>
+        <env name="TIMEZONE" value="Asia/Riyadh"/>
+    </php>
+</phpunit>
