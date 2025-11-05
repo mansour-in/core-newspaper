@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  app:
+    build: .
+    container_name: newspaper_app
+    volumes:
+      - ./:/var/www/newspaper-redirector
+    environment:
+      - APP_ENV=local
+    depends_on:
+      - db
+
+  web:
+    image: nginx:1.25
+    container_name: newspaper_web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/newspaper-redirector
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: newspaper_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: newspaper
+      MYSQL_USER: newspaper
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: rootsecret
+      TZ: Asia/Riyadh
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
