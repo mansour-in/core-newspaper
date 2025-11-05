@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<psalm
+    totallyTyped="true"
+    errorLevel="1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://getpsalm.org/schema/config">
+    <projectFiles>
+        <directory name="app"/>
+        <directory name="routes"/>
+        <directory name="scripts"/>
+    </projectFiles>
+    <plugins>
+    </plugins>
+</psalm>
