@@ -20,6 +20,7 @@ final class NewspaperSeeder
                 'slug' => 'aawsat',
                 'type' => Newspaper::TYPE_SEQUENCE,
                 'base_url' => 'https://aawsat.com/files/pdf/issue',
+                'pattern' => 'https://aawsat.com/files/pdf/issue{id}/',
                 'local_latest_id' => 1000,
             ],
             [

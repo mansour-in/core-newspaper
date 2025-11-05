@@ -18,9 +18,13 @@ final class RedirectBuilder
     public function buildFor(Newspaper $newspaper, DateTimeImmutable $ksaNow, ?int $sequenceId = null): string
     {
         $url = match ($newspaper->type()) {
-            Newspaper::TYPE_DATE => $this->buildDateUrl((string) $newspaper->pattern(), $ksaNow),
-            Newspaper::TYPE_MONTHLY => $this->buildMonthlyUrl((string) $newspaper->pattern(), $ksaNow),
-            Newspaper::TYPE_SEQUENCE => $this->buildSequenceUrl((string) $newspaper->baseUrl(), $sequenceId ?? (int) $newspaper->localLatestId()),
+            Newspaper::TYPE_DATE => $this->buildDateUrl($this->requirePattern($newspaper), $ksaNow),
+            Newspaper::TYPE_MONTHLY => $this->buildMonthlyUrl($this->requirePattern($newspaper), $ksaNow),
+            Newspaper::TYPE_SEQUENCE => $this->buildSequenceUrl(
+                $newspaper->baseUrl(),
+                $this->requireSequenceId($newspaper, $sequenceId),
+                $newspaper->pattern()
+            ),
             default => throw new RuntimeException('Unsupported newspaper type.'),
         };
 
@@ -48,9 +52,41 @@ final class RedirectBuilder
         return strtr($pattern, ['{month_year}' => $monthYear]);
     }
 
-    public function buildSequenceUrl(string $baseUrl, int $localLatestId): string
+    public function buildSequenceUrl(?string $baseUrl, int $localLatestId, ?string $pattern = null): string
     {
+        if ($pattern !== null && str_contains($pattern, '{id}')) {
+            return strtr($pattern, ['{id}' => (string) $localLatestId]);
+        }
+
+        if ($baseUrl === null || $baseUrl === '') {
+            throw new RuntimeException('Sequence newspapers require a base URL or pattern.');
+        }
+
         $normalized = rtrim($baseUrl, '/');
         return sprintf('%s/%d/index.html', $normalized, $localLatestId);
+    }
+
+    private function requirePattern(Newspaper $newspaper): string
+    {
+        $pattern = $newspaper->pattern();
+        if ($pattern === null || $pattern === '') {
+            throw new RuntimeException(sprintf('Newspaper %s is missing a pattern.', $newspaper->slug()));
+        }
+
+        return $pattern;
+    }
+
+    private function requireSequenceId(Newspaper $newspaper, ?int $sequenceId): int
+    {
+        if ($sequenceId !== null) {
+            return $sequenceId;
+        }
+
+        $id = $newspaper->localLatestId();
+        if ($id === null) {
+            throw new RuntimeException(sprintf('Newspaper %s is missing a local latest ID.', $newspaper->slug()));
+        }
+
+        return $id;
     }
 }

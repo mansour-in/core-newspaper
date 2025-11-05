@@ -42,11 +42,20 @@
                     </div>
                     <span class="px-3 py-1 text-sm rounded-full bg-slate-100 text-slate-600 uppercase">ID <?= htmlspecialchars((string) $paper->localLatestId() ?: '—') ?></span>
                 </header>
+                <?php $updatedAt = $paper->updatedAt(); ?>
                 <dl class="mt-4 space-y-2 text-sm text-slate-600">
-                    <div class="flex justify-between">
-                        <dt>Base / Pattern</dt>
-                        <dd class="text-right max-w-[14rem] truncate" title="<?= htmlspecialchars((string) ($paper->baseUrl() ?? $paper->pattern())) ?>"><?= htmlspecialchars((string) ($paper->baseUrl() ?? $paper->pattern())) ?></dd>
-                    </div>
+                    <?php if ($paper->baseUrl() !== null): ?>
+                        <div class="flex justify-between">
+                            <dt>Base URL</dt>
+                            <dd class="text-right max-w-[14rem] truncate" title="<?= htmlspecialchars((string) $paper->baseUrl()) ?>"><?= htmlspecialchars((string) $paper->baseUrl()) ?></dd>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($paper->pattern() !== null): ?>
+                        <div class="flex justify-between">
+                            <dt>Pattern</dt>
+                            <dd class="text-right max-w-[14rem] truncate" title="<?= htmlspecialchars((string) $paper->pattern()) ?>"><?= htmlspecialchars((string) $paper->pattern()) ?></dd>
+                        </div>
+                    <?php endif; ?>
                     <div class="flex justify-between">
                         <dt>Provider latest</dt>
                         <dd><?= htmlspecialchars((string) ($paper->providerLatestId() ?? '—')) ?></dd>
@@ -58,6 +67,10 @@
                     <div class="flex justify-between">
                         <dt>Last redirect URL</dt>
                         <dd class="text-right max-w-[14rem] truncate" title="<?= htmlspecialchars((string) $paper->lastRedirectUrl()) ?>"><?= htmlspecialchars((string) ($paper->lastRedirectUrl() ?? '—')) ?></dd>
+                    </div>
+                    <div class="flex justify-between">
+                        <dt>Updated at</dt>
+                        <dd><?= htmlspecialchars($updatedAt?->format('Y-m-d H:i:s') ?? '—') ?></dd>
                     </div>
                 </dl>
                 <?php if ($paper->type() === App\Models\Newspaper::TYPE_SEQUENCE): ?>

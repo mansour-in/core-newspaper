@@ -25,6 +25,7 @@
                         <h2 class="text-xl font-semibold text-slate-800 capitalize"><?= htmlspecialchars($paper->slug()) ?></h2>
                         <span class="px-3 py-1 text-sm rounded-full bg-slate-100 text-slate-600 uppercase"><?= htmlspecialchars($paper->type()) ?></span>
                     </div>
+                    <?php $target = $paper->pattern() ?? $paper->baseUrl(); ?>
                     <dl class="mt-4 space-y-1 text-sm text-slate-500">
                         <div class="flex justify-between">
                             <dt>Last redirect</dt>
@@ -32,6 +33,14 @@
                                 <?= htmlspecialchars((string) $paper->lastRedirectUrl() ?: '—') ?>
                             </dd>
                         </div>
+                        <?php if ($target !== null): ?>
+                            <div class="flex justify-between">
+                                <dt>Target template</dt>
+                                <dd class="text-right truncate max-w-[12rem]" title="<?= htmlspecialchars((string) $target) ?>">
+                                    <?= htmlspecialchars((string) $target) ?>
+                                </dd>
+                            </div>
+                        <?php endif; ?>
                         <div class="flex justify-between">
                             <dt>Cutover hour</dt>
                             <dd><?= htmlspecialchars((string) $paper->cutoverHour()) ?>:00</dd>

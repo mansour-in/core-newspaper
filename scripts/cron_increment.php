@@ -16,6 +16,19 @@ $sequenceService = $kernel->make(SequenceService::class);
 /** @var RedirectBuilder $redirectBuilder */
 $redirectBuilder = $kernel->make(RedirectBuilder::class);
 
+$logging = $kernel->security('logging') ?? [];
+$cronLog = is_array($logging) && isset($logging['cron_path'])
+    ? (string) $logging['cron_path']
+    : __DIR__ . '/../storage/logs/cron.log';
+
+$cronDirectory = dirname($cronLog);
+if (!is_dir($cronDirectory)) {
+    mkdir($cronDirectory, 0755, true);
+}
+if (!is_file($cronLog)) {
+    touch($cronLog);
+}
+
 $now = new DateTimeImmutable('now', new DateTimeZone('Asia/Riyadh'));
 
 $papers = Newspaper::all($pdo);
@@ -32,10 +45,14 @@ foreach ($papers as $paper) {
         continue;
     }
 
-    $url = $redirectBuilder->buildSequenceUrl((string) $updated->baseUrl(), $afterId);
+    $url = $redirectBuilder->buildSequenceUrl($updated->baseUrl(), $afterId, $updated->pattern());
     if (!headRequest($url)) {
         $updated->rollbackIncrement($pdo, $beforeId);
-        error_log(sprintf('Rollback applied for %s after failing HEAD check.', $updated->slug()), 3, __DIR__ . '/../storage/logs/cron.log');
+        error_log(
+            sprintf('Rollback applied for %s after failing HEAD check.', $updated->slug()),
+            3,
+            $cronLog
+        );
         continue;
     }
 

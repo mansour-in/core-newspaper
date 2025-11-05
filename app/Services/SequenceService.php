@@ -37,7 +37,7 @@ final class SequenceService
                 throw new RuntimeException('Newspaper not found while incrementing.');
             }
 
-            $current = new Newspaper($row);
+            $current = Newspaper::hydrate($row);
             $lastIncrement = $current->lastIncrementKsa();
             if ($lastIncrement === null) {
                 $update = $this->pdo->prepare('UPDATE newspapers SET last_increment_ksa = :today, updated_at = :updated WHERE id = :id');

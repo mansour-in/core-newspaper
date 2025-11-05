@@ -81,6 +81,8 @@ Seeded rows include:
 - `okaz` – date-based
 - `ring` – monthly magazine
 
+Sequence-based newspapers can optionally specify a `pattern` containing `{id}` to override the default `/{id}/index.html` suffix (used for Aawsat's `issue{id}/` format).
+
 ### Daily Cron
 
 Schedule the incrementer in KSA local time:
@@ -134,7 +136,7 @@ server {
 Options -Indexes
 RewriteEngine On
 RewriteBase /
-RewriteRule ^admin/status\.json$ admin/status.json [L]
+RewriteRule ^admin/status\.json$ index.php [L,QSA]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [L]

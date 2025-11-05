@@ -2,7 +2,7 @@ Options -Indexes
 RewriteEngine On
 RewriteBase /
 
-RewriteRule ^admin/status\.json$ admin/status.json [L]
+RewriteRule ^admin/status\.json$ index.php [L,QSA]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [L]

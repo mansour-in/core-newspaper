@@ -30,6 +30,16 @@ final class Newspaper
     }
 
     /**
+     * Hydrate a newspaper model from a raw database row.
+     *
+     * @param array<string, mixed> $attributes
+     */
+    public static function hydrate(array $attributes): self
+    {
+        return new self($attributes);
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function toArray(): array
@@ -197,7 +207,7 @@ final class Newspaper
             return null;
         }
 
-        return new self($row);
+        return self::hydrate($row);
     }
 
     public static function findById(PDO $pdo, int $id): ?self
@@ -209,7 +219,7 @@ final class Newspaper
             return null;
         }
 
-        return new self($row);
+        return self::hydrate($row);
     }
 
     /**
@@ -219,7 +229,7 @@ final class Newspaper
     {
         $statement = $pdo->query('SELECT * FROM newspapers ORDER BY slug');
         $rows = $statement !== false ? $statement->fetchAll(PDO::FETCH_ASSOC) : [];
-        return array_map(static fn (array $row): self => new self($row), $rows);
+        return array_map(static fn (array $row): self => self::hydrate($row), $rows);
     }
 
     public static function create(PDO $pdo, array $data): void
@@ -258,6 +268,7 @@ final class Newspaper
             'last_increment_ksa' => $lastIncrement?->format('Y-m-d'),
             'days_since_increment' => $daysSinceIncrement,
             'last_redirect_url' => $this->lastRedirectUrl(),
+            'updated_at' => $this->updatedAt()?->format('Y-m-d H:i:s'),
         ];
     }
 

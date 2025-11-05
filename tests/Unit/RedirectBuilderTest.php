@@ -39,6 +39,14 @@ final class RedirectBuilderTest extends TestCase
             'base_url' => 'https://example.com/pdf',
             'local_latest_id' => 10,
         ]);
+
+        Newspaper::create($this->pdo, [
+            'slug' => 'aawsat',
+            'type' => Newspaper::TYPE_SEQUENCE,
+            'base_url' => 'https://aawsat.com/files/pdf/issue',
+            'pattern' => 'https://aawsat.com/files/pdf/issue{id}/',
+            'local_latest_id' => 200,
+        ]);
     }
 
     public function testBuildDateUrl(): void
@@ -71,5 +79,14 @@ final class RedirectBuilderTest extends TestCase
         self::assertSame('https://example.com/pdf/11/index.html', $url);
         $fresh = Newspaper::findBySlug($this->pdo, 'arabnews');
         self::assertSame($url, $fresh?->lastRedirectUrl());
+    }
+
+    public function testSequencePatternReplacesIdPlaceholder(): void
+    {
+        $paper = Newspaper::findBySlug($this->pdo, 'aawsat');
+        self::assertNotNull($paper);
+        $builder = new RedirectBuilder($this->pdo);
+        $url = $builder->buildFor($paper, new DateTimeImmutable('now'));
+        self::assertSame('https://aawsat.com/files/pdf/issue200/', $url);
     }
 }
