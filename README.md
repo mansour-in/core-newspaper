@@ -59,6 +59,34 @@ make down
 
 ### Bare-Metal Setup
 
+#### Automated installer (PHP stack only)
+
+The repository ships with `scripts/install_php.sh`, a convenience script that installs
+system dependencies (PHP-FPM, MySQL, Nginx), sets up the database, prepares `.env`,
+runs migrations/seeders, and prints the generated admin + database credentials.
+
+```bash
+sudo ./scripts/install_php.sh \
+  --server-name your.domain.com \
+  --mysql-root-password "root-password"
+```
+
+Key flags:
+
+- `--app-dir` – Destination directory for the application (defaults to the repository).
+- `--db-name`, `--db-user`, `--db-pass` – Customise the MySQL schema and user (password auto-generated if omitted).
+- `--admin-username`, `--admin-password` – Control the admin credentials (password auto-generated if omitted).
+- `--skip-system-packages` – Skip apt-based package installation when dependencies are already present.
+
+> **Note:** The script targets Debian/Ubuntu hosts with `apt-get`. For other distributions,
+> install PHP 8.2+, Composer, MySQL 8+, and a web server manually before running the script
+> with `--skip-system-packages`.
+
+When the script completes it prints the admin login URL, username, and password along with
+the database credentials. Store these securely.
+
+#### Manual installation
+
 1. Install PHP 8.2, Nginx or Apache, and MySQL 8+.
 2. Clone the repository and run `composer install`.
 3. Configure environment variables (`.env`).
