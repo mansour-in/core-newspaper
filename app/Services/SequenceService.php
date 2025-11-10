@@ -30,7 +30,13 @@ final class SequenceService
 
         $this->pdo->beginTransaction();
         try {
-            $statement = $this->pdo->prepare('SELECT * FROM newspapers WHERE id = :id FOR UPDATE');
+            $query = 'SELECT * FROM newspapers WHERE id = :id';
+            $driver = strtolower((string) $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME));
+            if ($driver === 'mysql') {
+                $query .= ' FOR UPDATE';
+            }
+
+            $statement = $this->pdo->prepare($query);
             $statement->execute([':id' => $newspaper->id()]);
             $row = $statement->fetch(PDO::FETCH_ASSOC);
             if ($row === false) {

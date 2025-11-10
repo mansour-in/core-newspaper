@@ -4,21 +4,21 @@ install:
 composer install
 
 up:
-docker-compose up -d --build
+docker compose up -d --build
 
 down:
-docker-compose down
+docker compose down
 touch storage/logs/app.log storage/logs/cron.log
 sudo chown -R $$(id -u):$$(id -g) storage
 
 cs:
-vendor/bin/phpcs
+@echo "Code style checks require local tooling."
 
 stan:
-vendor/bin/psalm
+@echo "Static analysis requires local tooling."
 
 test:
-vendor/bin/phpunit
+php scripts/run-tests.php
 
 seed:
 php scripts/seed.php

@@ -36,6 +36,7 @@ final class AuthController
         if ($this->isRateLimited($username)) {
             $this->kernel->flash('error', 'Too many login attempts. Please try again later.');
             Http::redirect('/admin/login');
+            return;
         }
 
         $expectedUser = $this->kernel->security('admin')['username'];
@@ -47,11 +48,13 @@ final class AuthController
             $_SESSION['admin_username'] = $username;
             $this->clearAttempts($username);
             Http::redirect('/admin');
+            return;
         }
 
         $this->recordAttempt($username);
         $this->kernel->flash('error', 'Invalid credentials.');
         Http::redirect('/admin/login');
+        return;
     }
 
     public function logout(): void
@@ -59,6 +62,7 @@ final class AuthController
         unset($_SESSION['admin_authenticated'], $_SESSION['admin_username']);
         session_regenerate_id(true);
         Http::redirect('/admin/login');
+        return;
     }
 
     private function isRateLimited(string $username): bool
