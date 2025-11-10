@@ -6,7 +6,6 @@ defined('PHPUNIT_RUNNING') || define('PHPUNIT_RUNNING', true);
 
 use App\Controllers\Admin\AuthController;
 use App\Kernel;
-use PDO;
 use PHPUnit\Framework\TestCase;
 
 final class AdminLoginTest extends TestCase

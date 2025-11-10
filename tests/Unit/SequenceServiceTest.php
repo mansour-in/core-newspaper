@@ -6,9 +6,6 @@ defined('PHPUNIT_RUNNING') || define('PHPUNIT_RUNNING', true);
 
 use App\Models\Newspaper;
 use App\Services\SequenceService;
-use DateTimeImmutable;
-use DateTimeZone;
-use PDO;
 use PHPUnit\Framework\TestCase;
 
 final class SequenceServiceTest extends TestCase

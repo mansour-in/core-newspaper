@@ -6,8 +6,6 @@ defined('PHPUNIT_RUNNING') || define('PHPUNIT_RUNNING', true);
 
 use App\Models\Newspaper;
 use App\Services\RedirectBuilder;
-use DateTimeImmutable;
-use PDO;
 use PHPUnit\Framework\TestCase;
 
 final class RedirectBuilderTest extends TestCase

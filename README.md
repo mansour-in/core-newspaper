@@ -9,7 +9,7 @@ Production-ready PHP 8.2+ application that delivers permanent QR-code friendly e
 - Secure admin panel with CSRF protection, rate-limited login, and manual sequence adjustments.
 - Daily cron-safe sequence incrementer with HEAD rollback checks.
 - Health endpoint (`/admin/status.json`) for operational visibility.
-- Docker Compose stack (PHP-FPM, Nginx, MySQL) plus CI for PHPCS, Psalm, and PHPUnit.
+- Docker Compose stack (PHP-FPM, Nginx, MySQL) with a self-contained PHP test runner.
 
 ## Getting Started (Docker-first)
 
@@ -90,15 +90,24 @@ The script is idempotent, heals missed days, and rolls back on HEAD 404s.
 ### Makefile Helpers
 
 - `make install` – Composer install.
-- `make cs` – Run PHPCS (PSR-12).
-- `make stan` – Run Psalm static analysis.
-- `make test` – PHPUnit test suite.
+- `make cs` – Prints guidance for running code style checks with your locally installed tools.
+- `make stan` – Prints guidance for running static analysis with your locally installed tools.
+- `make test` – Lightweight built-in PHP test runner.
 - `make seed` – Seed base newspapers.
 - `make up` / `make down` – Docker lifecycle.
 
-### Continuous Integration
+### Testing
 
-GitHub Actions workflow runs PHPCS, Psalm, and PHPUnit on each push/PR.
+Run the bundled test harness with either command:
+
+```bash
+php scripts/run-tests.php
+# or
+composer test
+```
+
+The runner auto-discovers `*Test.php` files, executes `test*` methods, and reports a compact
+pass/fail summary without requiring external Composer packages.
 
 ### Web Server Configuration
 

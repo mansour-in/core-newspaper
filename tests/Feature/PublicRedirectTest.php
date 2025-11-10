@@ -7,7 +7,6 @@ defined('PHPUNIT_RUNNING') || define('PHPUNIT_RUNNING', true);
 use App\Controllers\PublicController;
 use App\Kernel;
 use App\Models\Newspaper;
-use PDO;
 use PHPUnit\Framework\TestCase;
 
 final class PublicRedirectTest extends TestCase
