@@ -21,4 +21,8 @@ COPY . .
 
 RUN chown -R www-data:www-data storage
 
+COPY docker/app/entrypoint.sh /usr/local/bin/app-entrypoint.sh
+RUN chmod +x /usr/local/bin/app-entrypoint.sh
+
+ENTRYPOINT ["app-entrypoint.sh"]
 CMD ["php-fpm"]
